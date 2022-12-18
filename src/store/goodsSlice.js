@@ -16,6 +16,8 @@ const goodsSlice = createSlice({
   name: 'goods',
   initialState: {
     goods: [],
+    goodsAll: [],
+    keyFilter: 'all',
   },
   reducers: {
     removeGoods(state, action) {
@@ -26,25 +28,27 @@ const goodsSlice = createSlice({
         (item) => item.id === action.payload.id
       )
       toggleItem.completed = !toggleItem.completed
+      toggleItem.validFilter = toggleItem.completed
     },
     filterGoods(state, action) {
       return {
         ...state,
         goods: [...state.goods].filter(
-          (item) => item.completed === !action.payload.completed
+          (item) => item.completed !== action.payload.completed
         ),
       }
     },
     filterGoodsAll(state, action) {
       return {
         ...state,
-        goods: [...state.goods],
+        goods: [...state.goodsAll],
       }
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchGoods.fulfilled, (state, action) => {
       state.goods = action.payload
+      state.goodsAll = action.payload
     })
   },
 })
